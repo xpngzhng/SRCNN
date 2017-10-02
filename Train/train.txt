@@ -1,1 +1,1 @@
-examples/SRCNN/train.h5
+train.h5
