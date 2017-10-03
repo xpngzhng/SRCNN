@@ -1,0 +1,1 @@
+D:\HandWrittenDataSetTrain\x64\Release\caffe.exe train --solver=SRCNN_solver.prototxt 
