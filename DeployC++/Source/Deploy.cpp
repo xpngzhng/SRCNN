@@ -76,7 +76,6 @@ int main()
     std::string modelBin = "E:\\Projects\\SRCNN\\Train\\model\\91-images-9-1-5\\x3\\snapshot_iter_3000000.caffemodel";
 
     cv::dnn::Net net = cv::dnn::readNetFromCaffe(modelTxt, modelBin);
-    int numFilters, numChannels, height, width;
 
     cv::Ptr<cv::dnn::Layer> conv1Layer = net.getLayer(cv::dnn::DictValue("conv1"));
     ConvLayerParams conv1Params;
