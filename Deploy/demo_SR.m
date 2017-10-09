@@ -17,7 +17,8 @@ close all;
 clear all;
 
 %% read ground truth image
-im  = imread('Set5\butterfly_GT.bmp');
+im = imread('space_shuttle.jpg');
+%im  = imread('Set5\butterfly_GT.bmp');
 %im  = imread('Set14\zebra.bmp');
 
 %% set parameters
