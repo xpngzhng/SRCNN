@@ -73,6 +73,52 @@ void relu(std::vector<cv::Mat>& arr)
 int main()
 {
     std::string modelTxt = "E:\\Projects\\SRCNN\\Train\\model\\91-images-9-1-5\\SRCNN_mat.prototxt";
+    std::string modelBin = "E:\\Projects\\SRCNN\\Train\\model\\91-images-9-1-5\\x3\\snapshot_iter_3000000-.caffemodel";
+
+    cv::dnn::Net net = cv::dnn::readNetFromCaffe(modelTxt, modelBin);
+
+    cv::Ptr<cv::dnn::Layer> conv1Layer = net.getLayer(cv::dnn::DictValue("conv1"));
+    ConvLayerParams conv1Params;
+    conv1Params.fill(conv1Layer);
+
+    cv::Ptr<cv::dnn::Layer> conv2Layer = net.getLayer(cv::dnn::DictValue("conv2"));
+    ConvLayerParams conv2Params;
+    conv2Params.fill(conv2Layer);
+
+    cv::Ptr<cv::dnn::Layer> conv3Layer = net.getLayer(cv::dnn::DictValue("conv3"));
+    ConvLayerParams conv3Params;
+    conv3Params.fill(conv3Layer);
+
+    cv::Mat orig = cv::imread("space_shuttle.jpg", cv::IMREAD_GRAYSCALE), temp;
+    cv::Mat bigBicubic;
+    cv::resize(orig, temp, cv::Size(), 1.0 / 3, 1.0 / 3, cv::INTER_LINEAR);
+    cv::resize(temp, bigBicubic, orig.size(), 0, 0, cv::INTER_LINEAR);
+
+    cv::Mat src32F;
+    bigBicubic.convertTo(src32F, CV_32F);
+
+    cv::Mat dst32F;
+    std::vector<cv::Mat> dst1, dst2, dst3;
+    conv1Params.conv(std::vector<cv::Mat>{ src32F }, dst1);
+    relu(dst1);
+    conv2Params.conv(dst1, dst2);
+    relu(dst2);
+    conv3Params.conv(dst2, dst3);
+    dst32F = dst3[0].clone();
+
+    cv::Mat bigSR;
+    dst32F.convertTo(bigSR, CV_8U);
+
+    cv::imshow("bicubic", bigBicubic);
+    cv::imshow("sr", bigSR);
+    cv::waitKey(0);
+
+    return 0;
+}
+
+int main1()
+{
+    std::string modelTxt = "E:\\Projects\\SRCNN\\Train\\model\\91-images-9-1-5\\SRCNN_mat.prototxt";
     std::string modelBin = "E:\\Projects\\SRCNN\\Train\\model\\91-images-9-1-5\\x3\\snapshot_iter_3000000.caffemodel";
 
     cv::dnn::Net net = cv::dnn::readNetFromCaffe(modelTxt, modelBin);
